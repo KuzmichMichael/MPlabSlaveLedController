@@ -45,32 +45,7 @@ void interrupt isr(void)
       CREN = 1;
       return;
     }
-    switch(RCREG){ //process recived bite
-        case FIRST_MODE:{
-            LEDcurrentMode = FIRST;
-            break;
-        } 
-        case SECOND_MODE:{
-            LEDcurrentMode = SECOND;
-            break;
-        } 
-        case THIRD_MODE:{
-            LEDcurrentMode = THIRD;
-            break;
-        } 
-        case FOURTH_MODE:{
-            LEDcurrentMode = FOURTH;
-            break;
-        } 
-        case FIFTH_MODE:{
-            LEDcurrentMode = FIFTH;
-            break;
-        } 
-        case SIXTH_MODE:{
-            LEDcurrentMode = SIXTH;
-            break;
-        }    
-    }
+    ledStateBuffer = RCREG;   
     WriteUSART(RCREG);
     RCIF = 0;
   }  
@@ -139,153 +114,30 @@ void initHW () {
 }
 
 void processModes(){
-    switch(LEDcurrentMode){
-    case FIRST:{
-        PORTAbits.RA2 = 1;
-        myShortDelay();
-        PORTAbits.RA2 = 0;
+    
+    if (ledStateBuffer & firstLEDcode){
+    PORTAbits.RA2 = 1;
+    } else PORTAbits.RA2 = 0;
+   
+    if (ledStateBuffer & secondLEDcode){
+    PORTAbits.RA3 = 1;
+    } else PORTAbits.RA3 = 0;
         
-        PORTAbits.RA3 = 1;
-        myShortDelay();
-        PORTAbits.RA3 = 0;
-        
-        PORTBbits.RB5 = 1;
-        myShortDelay();
-        PORTBbits.RB5 = 0;
-        
-        PORTBbits.RB3 = 1;
-        myShortDelay();
-        PORTBbits.RB3 = 0;
-        
-        PORTBbits.RB2 = 1;
-        myShortDelay();
-        PORTBbits.RB2 = 0;
-        
-        PORTBbits.RB0 = 1;
-        myShortDelay();
-        PORTBbits.RB0 = 0;
-        break;
-    }
-    case SECOND:{
-        PORTAbits.RA2 = 1;      
-        PORTAbits.RA3 = 1;    
-        PORTBbits.RB5 = 1;
-        PORTBbits.RB3 = 1;
-        PORTBbits.RB2 = 1;
-        PORTBbits.RB0 = 1;
-        
-        myShortDelay();
-        
-        PORTAbits.RA2 = 0;      
-        PORTAbits.RA3 = 0;    
-        PORTBbits.RB5 = 0;
-        PORTBbits.RB3 = 0;
-        PORTBbits.RB2 = 0;
-        PORTBbits.RB0 = 0; 
-        
-        myShortDelay();
-        break;
-    }
-    case THIRD:{
-        PORTAbits.RA2 = 1;      
-        PORTAbits.RA3 = 0;    
-        PORTBbits.RB5 = 1;
-        PORTBbits.RB3 = 0;
-        PORTBbits.RB2 = 1;
-        PORTBbits.RB0 = 0;
-        
-        myShortDelay();
-        
-        PORTAbits.RA2 = 0;      
-        PORTAbits.RA3 = 1;    
-        PORTBbits.RB5 = 0;
-        PORTBbits.RB3 = 1;
-        PORTBbits.RB2 = 0;
-        PORTBbits.RB0 = 1; 
-        
-        myShortDelay();
-        break;
-    }
-    case FOURTH:{
-        PORTAbits.RA2 = 1;      
-        PORTAbits.RA3 = 1;    
-        PORTBbits.RB5 = 0;
-        PORTBbits.RB3 = 0;
-        PORTBbits.RB2 = 1;
-        PORTBbits.RB0 = 1;
-        
-        myLongDelay();
-        
-        PORTAbits.RA2 = 0;      
-        PORTAbits.RA3 = 0;    
-        PORTBbits.RB5 = 1;
-        PORTBbits.RB3 = 1;
-        PORTBbits.RB2 = 0;
-        PORTBbits.RB0 = 0; 
-        myLongDelay();
-        break;
-    }
-    case FIFTH:{
-        PORTAbits.RA2 = 1;
-        PORTAbits.RA3 = 1;
-        myLongDelay();
-        PORTAbits.RA2 = 0;
-        PORTAbits.RA3 = 0;
-        
-        PORTBbits.RB5 = 1;       
-        PORTBbits.RB3 = 1;
-        myLongDelay();
-        PORTBbits.RB5 = 0;
-        PORTBbits.RB3 = 0;
-        
-        PORTBbits.RB2 = 1;
-        PORTBbits.RB0 = 1;
-        myLongDelay();
-        PORTBbits.RB2 = 0;
-        PORTBbits.RB0 = 0;
-        break;
-    }
-    case SIXTH:{
-        PORTBbits.RB5 = 1;       
-        PORTBbits.RB3 = 1;
-        myShortDelay();
-        PORTBbits.RB5 = 0;
-        PORTBbits.RB3 = 0;
-        
-        PORTBbits.RB2 = 1;
-        PORTAbits.RA3 = 1;
-        myShortDelay();
-        PORTBbits.RB2 = 0;
-        PORTAbits.RA3 = 0;
-        
-        PORTAbits.RA2 = 1;
-        PORTBbits.RB0 = 1;
-        myShortDelay();
-        PORTAbits.RA2 = 0;
-        PORTBbits.RB0 = 0;
-        break;
-    }
-    default:{
-        PORTAbits.RA2 = 1;      
-        PORTAbits.RA3 = 0;    
-        PORTBbits.RB5 = 0;
-        PORTBbits.RB3 = 0;
-        PORTBbits.RB2 = 0;
-        PORTBbits.RB0 = 1;
-        
-        myShortDelay();
-        
-        PORTAbits.RA2 = 0;      
-        PORTAbits.RA3 = 0;    
-        PORTBbits.RB5 = 0;
-        PORTBbits.RB3 = 0;
-        PORTBbits.RB2 = 0;
-        PORTBbits.RB0 = 0; 
-        
-        myShortDelay();
-    }
+    if (ledStateBuffer & thirdLEDcode){
+    PORTBbits.RB5 = 1;
+    } else PORTBbits.RB5 = 0;
+    
+    if (ledStateBuffer & fourthLEDcode){
+    PORTBbits.RB3 = 1;
+    } else PORTBbits.RB3 = 0;
 
-    }
+    if (ledStateBuffer & fifthLEDcode){
+    PORTBbits.RB2 = 1;
+    } else PORTBbits.RB2 = 0;
+    
+    if (ledStateBuffer & sixthLEDcode){
+    PORTBbits.RB0 = 1;
+    } else PORTBbits.RB0 = 0;
 }
 
 void myShortDelay(){

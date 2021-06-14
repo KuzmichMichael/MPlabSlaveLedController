@@ -34,7 +34,16 @@ enum ModeCodes{
     FOURTH_MODE = 0xE0,
     FIFTH_MODE  = 0x82,
     SIXTH_MODE  = 0xC1
-};*/ 
+};*/
+
+#define firstLEDcode   0b00000001
+#define secondLEDcode  0b00000010
+#define thirdLEDcode   0b00000100
+#define fourthLEDcode  0b00001000    
+#define fifthLEDcode   0b00010000
+#define sixthLEDcode   0b00100000
+
+char ledStateBuffer = 0b00000000;
 
 enum curModes{
     FIRST,
